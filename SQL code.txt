@@ -213,3 +213,11 @@ GROUP BY
 ORDER BY 
     avg_total DESC,
     billing_country ASC;
+
+SELECT name
+FROM genre
+WHERE genre_id IN (SELECT genre_id
+FROM track
+GROUP BY genre_id
+ORDER BY MIN(milliseconds) ASC
+LIMIT 2);
