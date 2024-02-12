@@ -176,3 +176,40 @@ GROUP BY USER_ID
 ORDER BY COUNT (*)
 DESC 
 LIMIT 5;
+
+SELECT invoice_id
+FROM invoice_line
+GROUP BY invoice_id
+HAVING COUNT(*) > 5;
+
+SELECT AVG(unit_price)
+FROM invoice_line AS avg_price
+
+SELECT 
+    billing_country,
+    MIN(total) AS min_total,
+    MAX(total) AS max_total,
+    AVG(total) AS avg_total
+FROM 
+    invoice
+WHERE 
+    invoice_id IN (
+        SELECT 
+            invoice_id
+        FROM 
+            invoice_line
+        GROUP BY 
+            invoice_id
+        HAVING 
+            COUNT(track_id) > 5 AND total > (
+                SELECT 
+                    AVG(unit_price)
+                FROM 
+                    track
+            )
+    )
+GROUP BY 
+    billing_country
+ORDER BY 
+    avg_total DESC,
+    billing_country ASC;
