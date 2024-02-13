@@ -221,3 +221,12 @@ FROM track
 GROUP BY genre_id
 ORDER BY MIN(milliseconds) ASC
 LIMIT 2);
+
+SELECT billing_city
+FROM invoice
+WHERE total > (
+    SELECT MAX(total)
+    FROM invoice
+    WHERE EXTRACT(YEAR FROM CAST(invoice_date AS date)) = '2009'
+)
+GROUP BY billing_city;
