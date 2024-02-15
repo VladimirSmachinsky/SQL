@@ -302,4 +302,28 @@ JOIN
    WHERE EXTRACT(YEAR
                  FROM CAST(invoice_date AS date)) = 2010
    GROUP BY month_invoice) AS t_2 ON t_1.month_invoice = t_2.month_invoice; 
-New SQL MY
+
+New SQL LEFT OUTER JOIN
+
+SELECT m_11.invoice_month,
+m_11.year_2011,
+m_12.year_2012,
+m_13.year_2013
+FROM(SELECT EXTRACT(MONTH FROM inv.invoice_date::DATE) AS invoice_month,
+                COUNT(inv.invoice_id) AS year_2011
+                FROM invoice AS inv
+                WHERE EXTRACT(YEAR FROM inv.invoice_date::DATE) = 2011
+                GROUP BY invoice_month) AS m_11
+LEFT OUTER JOIN(SELECT EXTRACT(MONTH FROM inv.invoice_date::DATE) AS invoice_month,
+                COUNT(inv.invoice_id) AS year_2012
+                FROM invoice AS inv
+                WHERE EXTRACT(YEAR FROM inv.invoice_date::DATE) = 2012
+                GROUP BY invoice_month) AS m_12
+                ON m_11.invoice_month = m_12.invoice_month
+LEFT OUTER JOIN(SELECT EXTRACT(MONTH FROM inv.invoice_date::DATE) AS invoice_month,
+                COUNT(inv.invoice_id) AS year_2013
+                FROM invoice AS inv
+                WHERE EXTRACT(YEAR FROM inv.invoice_date::DATE) = 2013
+                GROUP BY invoice_month) AS m_13
+                ON m_12.invoice_month = m_13.invoice_month;
+
