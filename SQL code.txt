@@ -230,3 +230,15 @@ WHERE total > (
     WHERE EXTRACT(YEAR FROM CAST(invoice_date AS date)) = '2009'
 )
 GROUP BY billing_city;
+
+SELECT c.name, AVG(m.length)
+FROM movie AS m
+LEFT OUTER JOIN film_category AS fc ON m.film_id=fc.film_id
+LEFT OUTER JOIN category AS c ON fc.category_id=c.category_id
+WHERE m.rating IN (SELECT rating
+FROM movie 
+GROUP BY rating
+ORDER BY AVG(rental_rate) DESC
+LIMIT 1)
+GROUP BY c.name
+ORDER BY c.name;
