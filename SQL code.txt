@@ -242,3 +242,10 @@ ORDER BY AVG(rental_rate) DESC
 LIMIT 1)
 GROUP BY c.name
 ORDER BY c.name;
+
+SELECT billing_country AS country,
+       COUNT(total) AS total_invoice
+FROM invoice
+GROUP BY billing_country
+ORDER BY total_invoice DESC
+LIMIT 5; 
