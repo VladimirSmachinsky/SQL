@@ -269,7 +269,6 @@ LEFT OUTER JOIN
           COUNT(customer_id) AS total_clients
    FROM client
    GROUP BY country) AS c ON i.country = c.country;  
-=======
 GROUP BY country; 
 
 SELECT EXTRACT(MONTH FROM CAST(invoice_date AS date)) AS month_invoice,
