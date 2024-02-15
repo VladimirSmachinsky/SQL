@@ -253,6 +253,7 @@ LIMIT 5;
 SELECT country AS country,
        COUNT(customer_id) AS total_clients
 FROM client
+<<<<<<< HEAD
 GROUP BY country;
 
 SELECT *
@@ -268,3 +269,37 @@ LEFT OUTER JOIN
           COUNT(customer_id) AS total_clients
    FROM client
    GROUP BY country) AS c ON i.country = c.country;  
+=======
+GROUP BY country; 
+
+SELECT EXTRACT(MONTH FROM CAST(invoice_date AS date)) AS month_invoice,
+       SUM(total) AS sum_of_total
+FROM invoice
+WHERE EXTRACT(YEAR FROM CAST(invoice_date AS date)) = 2010
+GROUP BY month_invoice; 
+
+SELECT EXTRACT(MONTH FROM CAST(invoice_date AS date)) AS month_invoice,
+       SUM(unit_price*quantity) AS sum_of_price
+FROM invoice AS i
+LEFT JOIN invoice_line AS il ON i.invoice_id = il.invoice_id
+WHERE EXTRACT(YEAR FROM CAST(invoice_date AS date)) = 2010
+GROUP BY month_invoice; 
+
+SELECT t_1.month_invoice,
+       sum_of_total,
+       sum_of_price
+FROM
+  (SELECT EXTRACT(MONTH FROM CAST(invoice_date AS date)) AS month_invoice,
+          SUM(total) AS sum_of_total
+   FROM invoice
+   WHERE EXTRACT(YEAR
+                 FROM CAST(invoice_date AS date)) = 2010
+   GROUP BY month_invoice) AS t_1
+JOIN
+  (SELECT EXTRACT(MONTH FROM CAST(invoice_date AS date)) AS month_invoice,
+          SUM(unit_price*quantity) AS sum_of_price
+   FROM invoice AS i
+   LEFT JOIN invoice_line AS il ON i.invoice_id = il.invoice_id
+   WHERE EXTRACT(YEAR
+                 FROM CAST(invoice_date AS date)) = 2010
+   GROUP BY month_invoice) AS t_2 ON t_1.month_invoice = t_2.month_invoice; 
