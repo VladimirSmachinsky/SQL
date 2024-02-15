@@ -249,3 +249,8 @@ FROM invoice
 GROUP BY billing_country
 ORDER BY total_invoice DESC
 LIMIT 5; 
+
+SELECT country AS country,
+       COUNT(customer_id) AS total_clients
+FROM client
+GROUP BY country; 
