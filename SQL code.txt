@@ -302,3 +302,4 @@ JOIN
    WHERE EXTRACT(YEAR
                  FROM CAST(invoice_date AS date)) = 2010
    GROUP BY month_invoice) AS t_2 ON t_1.month_invoice = t_2.month_invoice; 
+New SQL MY
