@@ -253,4 +253,18 @@ LIMIT 5;
 SELECT country AS country,
        COUNT(customer_id) AS total_clients
 FROM client
-GROUP BY country; 
+GROUP BY country;
+
+SELECT *
+FROM
+  (SELECT billing_country AS country,
+          COUNT(total) AS total_invoice
+   FROM invoice
+   GROUP BY billing_country
+   ORDER BY total_invoice DESC
+   LIMIT 5) AS i
+LEFT OUTER JOIN
+  (SELECT country AS country,
+          COUNT(customer_id) AS total_clients
+   FROM client
+   GROUP BY country) AS c ON i.country = c.country;  
