@@ -327,3 +327,17 @@ LEFT OUTER JOIN(SELECT EXTRACT(MONTH FROM inv.invoice_date::DATE) AS invoice_mon
                 GROUP BY invoice_month) AS m_13
                 ON m_12.invoice_month = m_13.invoice_month;
 
+SELECT 
+client.last_name
+FROM client
+WHERE client.customer_id IN (
+ SELECT customer_id
+ FROM invoice
+ WHERE EXTRACT(YEAR FROM invoice_date::timestamp) = 2013
+ GROUP BY customer_id
+ HAVING COUNT(*) Filter (Where EXTRACT(MONTH FROM invoice_date::timestamp) = 1) >= 1
+ And COUNT(*) Filter (Where EXTRACT(MONTH FROM invoice_date::timestamp) <> 1) >= 1
+)
+
+
+
