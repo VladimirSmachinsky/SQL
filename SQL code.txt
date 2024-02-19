@@ -339,5 +339,20 @@ WHERE client.customer_id IN (
  And COUNT(*) Filter (Where EXTRACT(MONTH FROM invoice_date::timestamp) <> 1) >= 1
 )
 
+SELECT c.name AS name_category,
+       COUNT(DISTINCT m.film_id) AS total_films
+FROM movie AS m LEFT JOIN film_actor AS fa ON fa.film_id=m.film_id
+LEFT JOIN actor AS a ON a.actor_id=fa.actor_id
+LEFT JOIN film_category AS fc ON m.film_id=fc.film_id
+LEFT JOIN category AS c ON c.category_id=fc.category_id
+WHERE a.actor_id IN (SELECT a.actor_id
+                     FROM movie AS m LEFT JOIN film_actor AS fa ON fa.film_id=m.film_id
+                     LEFT JOIN actor AS a ON a.actor_id=fa.actor_id
+                     WHERE m.release_year > 2013
+                     GROUP BY a.actor_id
+                     HAVING COUNT(a.actor_id)>7)
+GROUP BY name
+ORDER BY total_films DESC, name_category;
+
 
 
