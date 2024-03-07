@@ -384,5 +384,77 @@ FROM client
 GROUP BY country) AS c ON i.country=c.country
 ORDER BY i.total_invoice DESC, i.country;
 
+1. Перепишите один из своих прошлых запросов с использованием ключевого слова WITH. 
+Выведите топ-40 самых длинных фильмов, аренда которых составляет больше 2 долларов. Проанализируйте данные о возрастных рейтингах отобранных фильмов. Выгрузите в итоговую таблицу следующие поля:
+возрастной рейтинг (поле rating);
+минимальное и максимальное значения длительности (поле length), назовите поля min_length и max_length соответственно;
+среднее значение длительности (поле length), назовите поле avg_length;
+максимум, минимум и среднее для цены просмотра (поле rental_rate), назовите поля min_rental_rate, max_rental_rate, avg_rental_rate соответственно.
+Отсортируйте среднюю длительность фильма по возрастанию.
+
+SELECT top_40.rating,
+	   MIN(top_40.length) AS min_length,
+	   MAX(top_40.length) AS max_length,
+          AVG(top_40.length) AS avg_length,
+      	  MIN(top_40.rental_rate) AS min_rental_rate,
+          MAX(top_40.rental_rate) AS max_rental_rate,
+          AVG(top_40.rental_rate) AS avg_rental_rate 
+FROM 
+        (SELECT m.title,
+         m.rental_rate,
+         m.length,
+	 m.rating
+         FROM movie AS m
+         WHERE m.rental_rate > 2
+        ORDER BY m.length DESC
+        LIMIT 40) AS top_40
+GROUP BY rating
+ORDER BY AVG(length);
+
+2.
+Перепишите один из своих прошлых запросов, используя ключевое слово WITH. 
+Составьте сводную таблицу. Посчитайте заказы, оформленные за каждый месяц в течение нескольких лет: с 2011 по 2013 год. Итоговая таблица должна включать четыре поля: invoice_month, year_2011, year_2012, year_2013. Поле month должно хранить месяц в виде числа от 1 до 12. 
+Если в какой-либо месяц заказы не оформляли, номер такого месяца всё равно должен попасть в таблицу.
+
+WITH year11
+AS (
+    SELECT EXTRACT(MONTH FROM invoice.invoice_date::TIMESTAMP) AS invoice_month
+        ,COUNT(*) AS orders
+    FROM invoice
+    WHERE EXTRACT(YEAR FROM invoice.invoice_date::TIMESTAMP) = 2011
+    GROUP BY invoice_month
+    )
+    ,year12
+AS (
+    SELECT EXTRACT(MONTH FROM invoice.invoice_date::TIMESTAMP) AS invoice_month
+        ,COUNT(*) AS orders
+    FROM invoice
+    WHERE EXTRACT(YEAR FROM invoice.invoice_date::TIMESTAMP) = 2012
+    GROUP BY invoice_month
+    )
+    ,year13
+AS (
+    SELECT EXTRACT(MONTH FROM invoice.invoice_date::TIMESTAMP) AS invoice_month
+        ,COUNT(*) AS orders
+    FROM invoice
+    WHERE EXTRACT(YEAR FROM invoice.invoice_date::TIMESTAMP) = 2013
+    GROUP BY invoice_month
+    )
+SELECT year11.invoice_month
+    ,year11.orders AS year_2011
+    ,year12.orders AS year_2012
+    ,year13.orders AS year_2013
+FROM year11
+INNER JOIN year12 ON year11.invoice_month = year12.invoice_month
+INNER JOIN year13 ON year11.invoice_month = year13.invoice_month
+
+3.
+Проанализируйте данные из таблицы invoice за 2012 и 2013 годы. В итоговую таблицу должны войти поля:
+month — номер месяца;
+sum_total_2012 — выручка за этот месяц в 2012 году;
+sum_total_2013 — выручка за этот месяц в 2013 году;
+perc — процент, который отображает, насколько изменилась месячная выручка в 2013 году по сравнению с 2012 годом.
+Округлите значение в поле perc до ближайшего целого числа. Отсортируйте таблицу по значению в поле month от меньшего к большему.
+
 
 
