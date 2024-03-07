@@ -456,5 +456,27 @@ sum_total_2013 — выручка за этот месяц в 2013 году;
 perc — процент, который отображает, насколько изменилась месячная выручка в 2013 году по сравнению с 2012 годом.
 Округлите значение в поле perc до ближайшего целого числа. Отсортируйте таблицу по значению в поле month от меньшего к большему.
 
-
+WITH a AS
+(SELECT EXTRACT(MONTH
+FROM CAST(invoice_date AS DATE)) AS MONTH,
+SUM(total) AS sum_total_2012
+FROM invoice
+WHERE EXTRACT(YEAR
+FROM CAST(invoice_date AS DATE)) = 2012
+GROUP BY MONTH),
+b AS
+(SELECT EXTRACT(MONTH
+FROM CAST(invoice_date AS DATE)) AS MONTH,
+SUM(total) AS sum_total_2013
+FROM invoice
+WHERE EXTRACT(YEAR
+FROM CAST(invoice_date AS DATE)) = 2013
+GROUP BY MONTH)
+SELECT a.month,
+a.sum_total_2012,
+b.sum_total_2013,
+ROUND((b.sum_total_2013 - a.sum_total_2012) / a.sum_total_2012 * 100) AS perc
+FROM a
+LEFT JOIN b ON a.month = b.month
+ORDER BY MONTH;
 
