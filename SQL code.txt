@@ -530,3 +530,8 @@ SELECT CONCAT(first_name,', ', last_name,', ', address,', ', phone) AS client_In
 FROM client
 WHERE country = 'Czech Republic';
 
+4.
+Отобразите название и описание фильмов, выпущенных не позже 2006 года, если описание содержит слово 'Saga'. 
+При выводе замените в описании слово 'Saga' на слово 'Myth'. Если в конце описания присутствует фраза 'in A MySQL Convention' — удалите её.
+
+
