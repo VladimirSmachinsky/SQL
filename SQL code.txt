@@ -506,3 +506,27 @@ FROM
    ORDER BY SUM(total) DESC
    LIMIT 10) AS c_1
 ORDER BY c_1.customer_id;
+
+1.
+Выгрузите количество символов в строках поля email из таблицы client
+
+SELECT LENGTH(email)-- сформируйте поле с количеством символов
+FROM client;
+
+2.
+Отобразите несколько полей из таблицы movie:
+поле title, в котором все названия будут отображаться в верхнем регистре;
+поле rating, в котором все названия будут отображаться в нижнем регистре, с заменой символа - на пробел.
+
+SELECT UPPER(title),
+REPLACE(LOWER(rating), '-',' ') -- сформируйте поля с необходимым оформлением
+FROM movie;
+
+3.
+Сформируйте поле, в которое войдут имена, фамилии, адреса и номера телефонов клиентов из Чехии (англ. Czech Republic). 
+Данные разделите запятой с пробелом.
+
+SELECT CONCAT(first_name,', ', last_name,', ', address,', ', phone) AS client_Info
+FROM client
+WHERE country = 'Czech Republic';
+
