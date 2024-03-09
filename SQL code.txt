@@ -539,3 +539,17 @@ SELECT title,
 FROM movie
 WHERE release_year <= 2006
       AND description LIKE '%Saga%';
+
+Чтобы убедиться, что таблицы связаны по какому-либо полю, можно сделать несколько проверочных запросов. 
+Сначала можно посчитать пользователей в таблице profiles агрегирующей функцией COUNT:
+SELECT COUNT(user_id)
+FROM online_store.profiles; 
+
+Тип INNER JOIN предполагает объединение по «внутренней» области, общей для двух таблиц.
+К другим типам относятся LEFT OUTER JOIN, RIGHT OUTER JOIN, FULL OUTER JOIN.
+
+Вместо INNER JOIN в PostgreSQL можно использовать более короткую форму — JOIN.
+SELECT COUNT(*)
+FROM online_store.profiles AS p
+JOIN online_store.events e ON p.user_id = e.user_id
+WHERE e.event_name = 'onboarding'; 
