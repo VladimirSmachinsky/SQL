@@ -553,3 +553,10 @@ SELECT COUNT(*)
 FROM online_store.profiles AS p
 JOIN online_store.events e ON p.user_id = e.user_id
 WHERE e.event_name = 'onboarding'; 
+
+Напишите запрос, который выведет общую конверсию из пользователя в клиента для схемы tools_shop. 
+Результат округлите до одного знака после запятой.
+
+SELECT ROUND(COUNT(DISTINCT o.user_id) * 100.0 / COUNT(DISTINCT u.user_id), 1)
+FROM tools_shop.users u
+LEFT JOIN tools_shop.orders o ON u.user_id = o.user_id; 
