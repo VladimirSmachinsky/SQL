@@ -559,4 +559,27 @@ WHERE e.event_name = 'onboarding';
 
 SELECT ROUND(COUNT(DISTINCT o.user_id) * 100.0 / COUNT(DISTINCT u.user_id), 1)
 FROM tools_shop.users u
-LEFT JOIN tools_shop.orders o ON u.user_id = o.user_id; 
+LEFT JOIN tools_shop.orders o ON u.user_id = o.user_id;
+
+1.
+Рассчитайте LTV для схемы tools_shop за весь период.
+
+SELECT SUM(total_amt) / COUNT(DISTINCT user_id) as ltv
+FROM tools_shop.orders
+
+2.
+Добавьте группировку по месяцу создания аккаунта клиента, используя функцию DATE_TRUNC().
+Дополните предыдущий запрос: 
+Присоедините к orders таблицу с данными пользователей.
+Усеките дату создания аккаунта до месяца и сгруппируйте таблицу по этому полю.
+В итоговую таблицу должны войти два поля: месяц создания аккаунта и значение LTV за этот месяц.
+
+SELECT 
+  CAST(DATE_TRUNC('month', u.created_at) AS date) AS month,
+  SUM(o.total_amt) / COUNT(DISTINCT o.user_id) AS ltv
+FROM 
+  tools_shop.orders o
+INNER JOIN 
+  tools_shop.users AS u ON o.user_id = u.user_id
+GROUP BY 
+  DATE_TRUNC('month', u.created_at); 
