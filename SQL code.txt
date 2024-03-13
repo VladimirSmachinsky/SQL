@@ -596,3 +596,20 @@ LEFT JOIN tools_shop.orders o ON o.user_id = u.user_id;
 Запросу из теории не хватает дополнительного разреза — в таком случае показатель ARPPU будет равен LTV. 
 Добавьте группировку по дате оформления заказа в запрос для схемы online_store.
 
+SELECT CAST(DATE_TRUNC('day', o.event_dt) AS date) AS day,
+SUM(o.revenue) / COUNT(DISTINCT p.user_id) AS arppu
+FROM online_store.orders o
+JOIN online_store.profiles p ON o.user_id = p.user_id
+GROUP BY event_dt;
+
+3.
+Используя функцию DATE_TRUNC(), рассчитайте ARPPU в разрезе года оформления заказа для схемы tools_shop. 
+Поле с датой приведите к типу данных date, а значение ARPPU округлите до двух знаков после запятой.
+
+SELECT CAST(DATE_TRUNC('year', o.created_at) AS date) AS year,
+ROUND((SUM(o.total_amt) / COUNT(DISTINCT u.user_id)), 2) AS arppu
+FROM tools_shop.orders o
+JOIN tools_shop.users u ON o.user_id = u.user_id
+GROUP BY DATE_TRUNC('year', o.created_at);
+
+
