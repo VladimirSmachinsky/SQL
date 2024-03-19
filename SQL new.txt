@@ -1,0 +1,42 @@
+Информационная схема базы данных
+В прошлом уроке мы упоминали, что информация о ключах таблицы, как и данные о других ограничениях, хранится в специальной таблице с метаданными. На самом деле существует целая схема с информационными таблицами. Каждая таблица хранит в себе информацию о созданных в базе объектах. Она так и называется: information_schema (от англ. «информационная схема»). 
+Представьте, что вы работаете с незнакомой базой данных. Если нет документации, как узнать, какие типы данных используются и какие ограничения у полей? Выручат информационные таблицы.
+В схеме больше пятидесяти информационных таблиц, каждая из которых относится к определённому объекту или группе объектов. Например:
+information_schema.tables хранит информацию обо всех таблицах;
+information_schema.columns — обо всех полях всех таблиц;
+information_schema.constraint_column_usage — об ограничениях полей.
+Таким запросом можно вывести все таблицы в схеме mobile_app:
+SELECT *
+FROM information_schema.tables t 
+WHERE table_schema = 'mobile_app'; 
+
+Запрос ниже выведет все первичные ключи таблиц:
+SELECT *
+FROM information_schema.table_constraints tc
+WHERE table_schema = 'mobile_app' 
+          AND constraint_type = 'PRIMARY KEY'; 
+
+С помощью информационной схемы можно проверить ограничения полей. Такой запрос покажет, на каких полях стоят ограничения в схеме mobile_app:
+SELECT *
+FROM information_schema.constraint_column_usage
+WHERE table_schema = 'mobile_app'; 
+
+Поле таблицы constraint_schema хранит название схемы, в которой содержится ограничение. 
+Чтобы узнать, какие именно стоят ограничения, обратимся к таблице check_constraints:
+SELECT constraint_schema, 
+       constraint_name,
+       check_clause
+FROM information_schema.check_constraints cc2 
+WHERE constraint_schema = 'mobile_app'; 
+
+Изучите таблицы информационной схемы. Попробуйте найти информацию о типах данных полей и их точности.
+SELECT data_type,
+       character_octet_length,
+       numeric_precision,
+       numeric_precision_radix,
+       numeric_scale,
+       datetime_precision
+FROM information_schema.columns 
+WHERE table_schema = 'mobile_app'; 
+
+Команда DROP. Удаление объектов.
